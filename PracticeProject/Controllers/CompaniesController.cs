@@ -24,7 +24,7 @@ namespace PracticeProject.Controllers
         //// GET: Companies
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Companies.ToListAsync());
+            return View(_compRepo.GetAll());
         }
 
         //// GET: Companies/Details/5
@@ -35,8 +35,8 @@ namespace PracticeProject.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Companies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
+            var company = _compRepo.Find(id.GetValueOrDefault()); // Prevents an error from being thrown 
+                                                                  // if no ID is specified (null)
             if (company == null)
             {
                 return NotFound();
@@ -60,9 +60,7 @@ namespace PracticeProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(company); // We don't need to explicitly say that we are adding to our Companies table
-                                       // because EF can figure that out
-                await _context.SaveChangesAsync();
+                _compRepo.Add(company);
                 return RedirectToAction(nameof(Index));
             }
             return View(company);
@@ -76,7 +74,8 @@ namespace PracticeProject.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Companies.FindAsync(id);
+            var company = _compRepo.Find(id.GetValueOrDefault()); // Prevents an error from being thrown 
+                                                                  // if no ID is specified (null)
             if (company == null)
             {
                 return NotFound();
@@ -98,22 +97,7 @@ namespace PracticeProject.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(company);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CompanyExists(company.CompanyId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _compRepo.Update(company);
                 return RedirectToAction(nameof(Index));
             }
             return View(company);
@@ -127,30 +111,8 @@ namespace PracticeProject.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Companies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
-            if (company == null)
-            {
-                return NotFound();
-            }
-
-            return View(company);
-        }
-
-        //// POST: Companies/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var company = await _context.Companies.FindAsync(id);
-            _context.Companies.Remove(company);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CompanyExists(int id)
-        {
-            return _context.Companies.Any(e => e.CompanyId == id);
+            _compRepo.Remove(id.GetValueOrDefault());
+            return RedirectToAction(nameof(Index)); // Redirects to Index action
         }
     }
 }
