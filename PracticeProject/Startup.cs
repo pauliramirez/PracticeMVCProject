@@ -31,7 +31,7 @@ namespace PracticeProject
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Implement ICompanyRepository
-            services.AddScoped<ICompanyRepository, CompanyRepositoryEF>(); // Same instance for entire request
+            services.AddScoped<ICompanyRepository, CompanyRepository>(); // Same instance for entire request
 
             services.AddControllersWithViews();
         }
