@@ -23,7 +23,7 @@ namespace PracticeProject.Repository
         public Company Add(Company company)
         {
             var sql = "INSERT INTO Companies (Name, Address, City, State, PostalCode)" +
-                "VALUES(@Name, @Address, @City, @State, @PostalCode" +
+                "VALUES(@Name, @Address, @City, @State, @PostalCode)" +
                 "SELECT CAST(SCOPE_IDENTITY() as int)";
             var id = db.Query<int>(sql, company).Single();
             company.CompanyId = id;
@@ -33,7 +33,7 @@ namespace PracticeProject.Repository
         public Company Find(int id)
         {
             var sql = "SELECT * FROM Companies " +
-                "WHERE CompanyId = @Id";
+                "WHERE CompanyId = @CompanyId";
             return db.Query<Company>(sql, new { @CompanyId = id }).Single(); // Ensures we only have one ID
                                                                              // Prevents conversion from IEnumerable
                                                                              // error
@@ -47,15 +47,15 @@ namespace PracticeProject.Repository
 
         public void Remove(int id)
         {
-            var sql = "DELETE FROM Companies" +
+            var sql = "DELETE FROM Companies " +
                 "WHERE CompanyId = @Id";
             db.Execute(sql, new { id });
         }
 
         public Company Update(Company company)
         {
-            var sql = "UPDATE Companies" +
-                "SET Name = @Name, Address = @Address, City = @City, State = @State, PostalCode = PostalCode" +
+            var sql = "UPDATE Companies " +
+                "SET Name = @Name, Address = @Address, City = @City, State = @State, PostalCode = @PostalCode " +
                 "WHERE CompanyId = @CompanyId";
             db.Execute(sql, company);
             return company;
