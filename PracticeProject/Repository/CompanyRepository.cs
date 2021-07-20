@@ -58,7 +58,7 @@ namespace PracticeProject.Repository
                 "SET Name = @Name, Address = @Address, City = @City, State = @State, PostalCode = @PostalCode " +
                 "WHERE CompanyId = @CompanyId";
             db.Execute(sql, company);
-            return company;
+            return company; 
         }
     }
 }
