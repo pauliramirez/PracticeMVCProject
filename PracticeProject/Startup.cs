@@ -32,6 +32,8 @@ namespace PracticeProject
 
             // Implement ICompanyRepository
             services.AddScoped<ICompanyRepository, CompanyRepository>(); // Same instance for entire request
+            // Implement IEmployeeRepository
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>(); // Same instance for entire request
 
             services.AddControllersWithViews();
         }
