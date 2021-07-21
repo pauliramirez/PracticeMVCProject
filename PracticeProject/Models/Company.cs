@@ -13,5 +13,8 @@ namespace PracticeProject.Models
         public string City { get; set; }
         public string State { get; set; }
         public int PostalCode { get; set; }
+
+        // A company can have many employees
+        public List<Employee> Employees { get; set; }
     }
 }
